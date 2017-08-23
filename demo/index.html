@@ -1,0 +1,111 @@
+<!--
+@license
+Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>simple app</title>
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <link rel="import" href="../../polymer/polymer-element.html">
+  <link rel="import" href="../../iron-list/iron-list.html">
+  <link rel="import" href="../show-more.html">
+</head>
+
+<body>
+  <style>
+    body {
+      height: 100vh;
+      margin: 0;
+      padding: 10px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+
+    iron-list {
+      height: 100%;
+      flex: 1 1 auto;
+      contain: content;
+    }
+
+    [slot="main"] {
+      cursor: pointer;
+    }
+
+    [slot="more"] {
+      padding: 10px;
+      background: lightgray;
+    }
+
+    img {
+      width: 400px;
+      height: 200px;
+    }
+  </style>
+
+  <h2>List with animated items</h2>
+  <iron-list id="list">
+    <template>
+      <show-more>
+        <p slot="main" onclick="toggleShow(event)">
+          [[item.main]]
+        </p>
+        <div slot="more">
+          [[item.more]]
+          <img src$="http://lorempixel.com/400/200/cats/?[[index]]">
+        </div>
+      </show-more>
+    </template>
+  </iron-list>
+
+  <script>
+    list.items = [{
+      main: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae eaque, voluptas labore nemo...',
+      more: '...vitae placeat adipisci earum dolorum laboriosam quos temporibus ullam? Quo repudiandae aspernatur aliquam modi, libero expedita est!'
+    }, {
+      main: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae eaque, voluptas labore nemo, vitae placeat adipisci earum dolorum laboriosam quos temporibus ullam?',
+      more: 'Quo repudiandae aspernatur aliquam modi, libero expedita est!'
+    }, {
+      main: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae eaque, voluptas labore nemo, vitae placeat adipisci earum dolorum laboriosam quos temporibus ullam?',
+      more: 'Quo repudiandae aspernatur aliquam modi, libero expedita est!'
+    }, {
+      main: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae eaque, voluptas labore nemo, vitae placeat adipisci earum dolorum laboriosam quos temporibus ullam?',
+      more: 'Quo repudiandae aspernatur aliquam modi, libero expedita est!'
+    }, {
+      main: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae eaque, voluptas labore nemo, vitae placeat adipisci earum dolorum laboriosam quos temporibus ullam?',
+      more: 'Quo repudiandae aspernatur aliquam modi, libero expedita est!'
+    }, {
+      main: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae eaque, voluptas labore nemo, vitae placeat adipisci earum dolorum laboriosam quos temporibus ullam?',
+      more: 'Quo repudiandae aspernatur aliquam modi, libero expedita est!'
+    }, {
+      main: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae eaque, voluptas labore nemo, vitae placeat adipisci earum dolorum laboriosam quos temporibus ullam?',
+      more: 'Quo repudiandae aspernatur aliquam modi, libero expedita est!'
+    }, {
+      main: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae eaque, voluptas labore nemo, vitae placeat adipisci earum dolorum laboriosam quos temporibus ullam?',
+      more: 'Quo repudiandae aspernatur aliquam modi, libero expedita est!'
+    }, ];
+
+    function toggleShow(event) {
+      const collapse = event.target.closest('show-more');
+      collapse.addEventListener('animation-done', resetChildren);
+      collapse.show = !collapse.show;
+    }
+
+    function resetChildren() {
+      list.notifyResize();
+    }
+  </script>
+</body>
+
+</html>

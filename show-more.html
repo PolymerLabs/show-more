@@ -1,0 +1,187 @@
+<!--
+@license
+Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="show-more">
+  <template>
+    <style>
+      #collapsibleContent,
+      #collapsibleContent>div {
+        overflow: hidden;
+        contain: content;
+        will-change: transform;
+        transform-origin: top left;
+        animation-timing-function: step-end;
+        animation-duration: 200ms;
+      }
+
+      #collapsibleContent:not(.show):not(.animating) {
+        display: none;
+      }
+
+      #collapsibleContent.animating {
+        animation-name: expand;
+      }
+
+      #collapsibleContent.animating>div {
+        animation-name: expandInverse;
+      }
+
+      #collapsibleContent.animating:not(.show),
+      #collapsibleContent.animating:not(.show)>div {
+        animation-direction: reverse;
+      }
+
+      @keyframes expand {
+        0% {
+          transform: scaleY(0);
+        }
+        9.09091% {
+          transform: scaleY(0.09091);
+        }
+        18.18182% {
+          transform: scaleY(0.18182);
+        }
+        27.27273% {
+          transform: scaleY(0.27273);
+        }
+        36.36364% {
+          transform: scaleY(0.36364);
+        }
+        45.45455% {
+          transform: scaleY(0.45455);
+        }
+        54.54545% {
+          transform: scaleY(0.54545);
+        }
+        63.63636% {
+          transform: scaleY(0.63636);
+        }
+        72.72727% {
+          transform: scaleY(0.72727);
+        }
+        81.81818% {
+          transform: scaleY(0.81818);
+        }
+        90.90909% {
+          transform: scaleY(0.90909);
+        }
+        100% {
+          transform: scaleY(1);
+        }
+      }
+
+      @keyframes expandInverse {
+        0% {
+          transform: scaleY(1000);
+        }
+        9.09091% {
+          transform: scaleY(10.99989);
+        }
+        18.18182% {
+          transform: scaleY(5.49995);
+        }
+        27.27273% {
+          transform: scaleY(3.66663);
+        }
+        36.36364% {
+          transform: scaleY(2.74997);
+        }
+        45.45455% {
+          transform: scaleY(2.19998);
+        }
+        54.54545% {
+          transform: scaleY(1.83335);
+        }
+        63.63636% {
+          transform: scaleY(1.57144);
+        }
+        72.72727% {
+          transform: scaleY(1.37501);
+        }
+        81.81818% {
+          transform: scaleY(1.22222);
+        }
+        90.90909% {
+          transform: scaleY(1.1);
+        }
+        100% {
+          transform: scaleY(1);
+        }
+      }
+    </style>
+    <div id="wrapper">
+      <slot name="main"></slot>
+      <div id="collapsibleContent" on-animationend="_onAnimationend">
+        <div>
+          <slot name="more"></slot>
+        </div>
+      </div>
+    </div>
+  </template>
+  <script>
+    class ShowMore extends Polymer.Element {
+
+      static get is() {
+        return 'show-more';
+      }
+
+      static get properties() {
+        return {
+          show: {
+            type: Boolean,
+            observer: '_showChanged'
+          }
+        }
+      }
+
+      get _wrapper() {
+        return this.$.wrapper;
+      }
+
+      _showChanged() {
+        this.$.collapsibleContent.classList.toggle('show', !!this.show);
+        this.$.collapsibleContent.classList.add('animating');
+
+        // Avoid unnecessary re-layout.
+        if (!this.nextElementSibling) return;
+        const itemHeight = this.$.collapsibleContent.offsetHeight * (this.show ? 1 : -1);
+
+        let item = this;
+        while ((item = item.nextElementSibling)) {
+          const wrapper = item._wrapper;
+          if (wrapper) {
+            wrapper.style.transition = 'transform 200ms linear';
+            wrapper.style.transform = `translateY(${itemHeight}px)`;
+          }
+        }
+      }
+
+      _onAnimationend(event) {
+        if (event.target === this.$.collapsibleContent) {
+          this.$.collapsibleContent.classList.remove('animating');
+
+          let item = this;
+          while ((item = item.nextElementSibling)) {
+            const wrapper = item._wrapper;
+            if (wrapper) {
+              wrapper.style.transition = wrapper.style.transform = '';
+            }
+          }
+
+          this.dispatchEvent(new CustomEvent('animation-done'));
+        }
+      }
+    }
+
+    customElements.define(ShowMore.is, ShowMore);
+  </script>
+</dom-module>
