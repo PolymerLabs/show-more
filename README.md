@@ -14,3 +14,6 @@ and pushes up/down `<show-more>` siblings using position transforms, achieving b
     </show-more>
   </template>
 </iron-list>
+```
+
+![show-more](https://user-images.githubusercontent.com/6173664/29624173-b3892e46-8828-11e7-83af-7fcb14021c9a.gif)
